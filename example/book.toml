@@ -1,0 +1,5 @@
+[book]
+authors = ["Kenta Yamaguchi"]
+language = "en"
+src = "src"
+title = "Example Documents"
