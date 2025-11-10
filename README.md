@@ -149,6 +149,6 @@ Contributions are welcome! Please feel free to submit issues or pull requests.
 
 ## Links
 
-- [npm package](https://www.npmjs.com/package/mdbook-mcp-server) (after publishing)
+- [npm package](https://www.npmjs.com/package/mdbook-mcp-server)
 - [mdbook Documentation](https://rust-lang.github.io/mdBook/)
 - [Model Context Protocol](https://modelcontextprotocol.io/)
