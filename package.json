@@ -1,0 +1,50 @@
+{
+  "name": "mdbook-mcp-server",
+  "version": "0.1.0",
+  "description": "A generic MCP server for mdbook projects",
+  "main": "dist/index.js",
+  "type": "module",
+  "bin": {
+    "mdbook-mcp-server": "dist/index.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "start": "node dist/index.js",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "mdbook",
+    "mcp",
+    "documentation",
+    "model-context-protocol",
+    "claude",
+    "claude-code"
+  ],
+  "author": "Kenta Yamaguchi",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KEY60228/mdbook-mcp-server.git"
+  },
+  "bugs": {
+    "url": "https://github.com/KEY60228/mdbook-mcp-server/issues"
+  },
+  "homepage": "https://github.com/KEY60228/mdbook-mcp-server#readme",
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "dependencies": {
+    "@iarna/toml": "^2.2.5",
+    "@modelcontextprotocol/sdk": "^1.21.1"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.0",
+    "typescript": "^5.9.3"
+  }
+}
