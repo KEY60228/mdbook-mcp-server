@@ -1,0 +1,5 @@
+[book]
+authors = ["Lewis Carroll"]
+language = "en"
+src = "src"
+title = "Alice's Adventures in Wonderland"

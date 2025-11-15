@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "alice-wonderland": {
+      "command": "npx",
+      "args": ["mdbook-mcp-server"],
+      "env": {
+        "MDBOOK_ROOT_PATH": "/absolute/path/to/mdbook-mcp-server/example",
+        "MDBOOK_SERVER_NAME": "alice_wonderland"
+      }
+    }
+  }
+}
