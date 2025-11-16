@@ -186,7 +186,7 @@ Search for content within the mdbook project using fuzzy search. Supports both E
 
 ## Requirements
 
-- Node.js >= 22.0.0
+- Node.js >= 24.0.0
 - A valid mdbook project with `book.toml` and `src/SUMMARY.md`
 
 ## License
