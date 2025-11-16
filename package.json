@@ -41,7 +41,8 @@
   },
   "dependencies": {
     "@iarna/toml": "^2.2.5",
-    "@modelcontextprotocol/sdk": "^1.21.1"
+    "@modelcontextprotocol/sdk": "^1.21.1",
+    "fuse.js": "^7.0.0"
   },
   "devDependencies": {
     "@types/node": "^24.10.0",

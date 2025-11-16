@@ -7,13 +7,15 @@ import { TomlParser } from './adapters/TomlParser.js';
 import { MarkdownParser } from './adapters/MarkdownParser.js';
 import { MdbookStructureService } from './services/MdbookStructureService.js';
 import { MdbookContentService } from './services/MdbookContentService.js';
-import { MdbookServerConfig } from './types.js';
+import { MdbookSearchService } from './services/MdbookSearchService.js';
+import { MdbookServerConfig, SearchContentRequest, SearchContentResponse } from './types.js';
 
 export class MdbookMcpServer {
   private mcpServer: McpServer;
   private project: MdbookProject;
   private structureService: MdbookStructureService;
   private contentService: MdbookContentService;
+  private searchService: MdbookSearchService;
 
   constructor(config: MdbookServerConfig) {
     const serverName = config.serverName || 'mdbook-mcp-server';
@@ -37,6 +39,7 @@ export class MdbookMcpServer {
 
     this.structureService = new MdbookStructureService(fs, tomlParser, markdownParser);
     this.contentService = new MdbookContentService(fs);
+    this.searchService = new MdbookSearchService(fs, this.structureService);
 
     // プロジェクトの初期化
     const srcPath = `${config.rootPath}/src`;
@@ -83,6 +86,49 @@ export class MdbookMcpServer {
           const content = await this.contentService.readContent(this.project, path);
           return {
             content: [{ type: 'text', text: JSON.stringify(content, null, 2) }],
+          };
+        } catch (error: any) {
+          return {
+            content: [{ type: 'text', text: `Error: ${error.message}` }],
+            isError: true,
+          };
+        }
+      }
+    );
+
+    // search_content ツールの登録
+    this.mcpServer.registerTool(
+      'search_content',
+      {
+        description: 'Search for content in the mdbook project',
+        inputSchema: {
+          query: z.string().describe('Search query (supports Japanese and English)'),
+          maxResults: z.number().optional().describe('Maximum number of results (default: 10)'),
+        },
+      },
+      async (args: any) => {
+        try {
+          const { query, maxResults = 10 } = args as SearchContentRequest;
+
+          const results = await this.searchService.search(this.project, {
+            query,
+            maxResults,
+          });
+
+          const response: SearchContentResponse = {
+            query,
+            totalMatches: results.length,
+            results: results.map((r) => ({
+              path: r.path,
+              title: r.title,
+              score: r.score,
+              matchCount: r.matchCount,
+              matches: r.matches,
+            })),
+          };
+
+          return {
+            content: [{ type: 'text', text: JSON.stringify(response, null, 2) }],
           };
         } catch (error: any) {
           return {
