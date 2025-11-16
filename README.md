@@ -73,7 +73,7 @@ You can run multiple instances of the server for different mdbook projects:
 
 ## MCP Tools
 
-This server provides two tools:
+This server provides three tools:
 
 ### 1. `list_structure`
 
@@ -135,6 +135,56 @@ Read the content of a specific markdown file.
   }
 }
 ```
+
+### 3. `search_content`
+
+Search for content within the mdbook project using fuzzy search. Supports both English and Japanese keywords.
+
+**Parameters:**
+- `query` (string, required): Search query
+- `maxResults` (number, optional): Maximum number of results to return (default: 10, max: 100)
+
+**Example:**
+```json
+{
+  "query": "authentication",
+  "maxResults": 5
+}
+```
+
+**Returns:**
+```json
+{
+  "query": "authentication",
+  "totalMatches": 3,
+  "results": [
+    {
+      "path": "auth/intro.md",
+      "title": "Authentication",
+      "score": 0.001,
+      "matchCount": 2,
+      "matches": [
+        {
+          "snippet": "...user authentication is important...",
+          "position": 123
+        },
+        {
+          "snippet": "...authentication methods include...",
+          "position": 456
+        }
+      ]
+    }
+  ]
+}
+```
+
+**Features:**
+- **Fuzzy search**: Handles typos and spelling variations
+- **Japanese support**: Works with hiragana, katakana, and kanji
+- **Smart scoring**: Results are ranked by relevance (lower score = better match)
+- **Context snippets**: Shows surrounding text for each match
+
+## Requirements
 
 - Node.js >= 22.0.0
 - A valid mdbook project with `book.toml` and `src/SUMMARY.md`

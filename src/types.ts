@@ -37,3 +37,41 @@ export interface ReadContentResponse {
     lastModified: string;
   };
 }
+
+// 検索関連の型定義
+export interface SearchContentRequest {
+  /** 検索クエリ */
+  query: string;
+
+  /** 最大結果件数（オプション、デフォルト: 10） */
+  maxResults?: number;
+}
+
+export interface SearchContentResponse {
+  /** 検索クエリ */
+  query: string;
+
+  /** 総マッチ件数 */
+  totalMatches: number;
+
+  /** 検索結果 */
+  results: Array<{
+    /** ファイルの相対パス */
+    path: string;
+
+    /** 章のタイトル */
+    title: string;
+
+    /** fuse.js のスコア（0に近いほど関連性が高い） */
+    score: number;
+
+    /** マッチ数 */
+    matchCount: number;
+
+    /** マッチしたスニペット */
+    matches: Array<{
+      snippet: string;
+      position: number;
+    }>;
+  }>;
+}
