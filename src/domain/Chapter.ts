@@ -1,6 +1,6 @@
 export interface Chapter {
   title: string;
-  path: string | null;  // nullの場合はセパレーター
-  level: number;        // 0始まりの階層レベル
-  children?: Chapter[]; // ネストされた章
+  path: string | null;  // null indicates separator
+  level: number;        // 0-based nesting level
+  children?: Chapter[]; // Nested chapters
 }

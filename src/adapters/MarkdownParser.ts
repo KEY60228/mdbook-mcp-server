@@ -9,11 +9,11 @@ export class MarkdownParser {
       const stack: { level: number; chapter: Chapter }[] = [];
 
       for (const line of lines) {
-        // リンク形式: - [Title](path.md) または空行・コメントはスキップ
+        // Link format: - [Title](path.md) or skip empty lines/comments
         const match = line.match(/^(\s*)[-*]\s+\[([^\]]+)\]\(([^)]+)\)/);
 
         if (!match) {
-          // セパレーター形式: ---
+          // Separator format: ---
           if (line.trim().match(/^---+$/)) {
             chapters.push({
               title: '---',
@@ -25,7 +25,7 @@ export class MarkdownParser {
         }
 
         const [, indent, title, pathStr] = match;
-        const level = Math.floor(indent.length / 2); // 2スペースでインデント1レベル
+        const level = Math.floor(indent.length / 2); // 1 level per 2 spaces
 
         const chapter: Chapter = {
           title,
@@ -33,16 +33,16 @@ export class MarkdownParser {
           level,
         };
 
-        // スタックを使って階層構造を構築
+        // Build hierarchy using stack
         while (stack.length > 0 && stack[stack.length - 1].level >= level) {
           stack.pop();
         }
 
         if (stack.length === 0) {
-          // トップレベル
+          // Top level
           chapters.push(chapter);
         } else {
-          // 親の子として追加
+          // Add as parent's child
           const parent = stack[stack.length - 1].chapter;
           if (!parent.children) {
             parent.children = [];

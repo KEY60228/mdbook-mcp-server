@@ -8,25 +8,25 @@ export class PathValidationError extends Error {
 }
 
 export function validatePath(requestedPath: string, rootPath: string): string {
-  // パスを正規化
+  // Normalize path
   const normalized = path.normalize(requestedPath);
 
-  // ".." を含む場合はエラー
+  // Error if contains ".."
   if (normalized.includes('..')) {
     throw new PathValidationError('Path traversal detected');
   }
 
-  // 絶対パスの場合はエラー
+  // Error if absolute path
   if (path.isAbsolute(normalized)) {
     throw new PathValidationError('Absolute paths are not allowed');
   }
 
-  // rootPath配下のsrcディレクトリ内のパスを構築
+  // Build path within src directory under rootPath
   const fullPath = path.join(rootPath, 'src', normalized);
   const realPath = path.resolve(fullPath);
   const resolvedRoot = path.resolve(rootPath);
 
-  // rootPath配下にあることを確認
+  // Verify path is under rootPath
   if (!realPath.startsWith(resolvedRoot)) {
     throw new PathValidationError('Access outside root path');
   }

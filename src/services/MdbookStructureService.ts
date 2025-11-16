@@ -12,11 +12,11 @@ export class MdbookStructureService {
   ) {}
 
   async getStructure(project: MdbookProject): Promise<BookStructure> {
-    // book.tomlを読み込み
+    // Read book.toml
     const tomlContent = await this.fs.readFile(project.getBookTomlPath());
     const bookData = this.tomlParser.parse(tomlContent);
 
-    // SUMMARY.mdを読み込み
+    // Read SUMMARY.md
     const summaryContent = await this.fs.readFile(project.getSummaryPath());
     const chapters = this.markdownParser.parseSummary(summaryContent);
 

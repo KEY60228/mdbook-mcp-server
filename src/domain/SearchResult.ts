@@ -1,24 +1,24 @@
 export interface SearchMatch {
-  /** マッチした箇所のスニペット */
+  /** Matched snippet */
   snippet: string;
 
-  /** マッチ位置（0始まりの文字インデックス） */
+  /** Match position (0-based character index) */
   position: number;
 }
 
 export interface SearchResult {
-  /** ファイルの相対パス（src/からの相対） */
+  /** Relative file path (from src/) */
   path: string;
 
-  /** 章のタイトル（SUMMARY.mdから取得） */
+  /** Chapter title (from SUMMARY.md) */
   title: string;
 
-  /** fuse.js のスコア（0に近いほど関連性が高い） */
+  /** fuse.js score (closer to 0 = higher relevance) */
   score: number;
 
-  /** マッチ数 */
+  /** Match count */
   matchCount: number;
 
-  /** マッチしたスニペット（最大3件） */
+  /** Matched snippets (max 3) */
   matches: SearchMatch[];
 }
