@@ -1,4 +1,4 @@
-// エラー型
+// Error type
 export interface ErrorResponse {
   error: {
     code: string;
@@ -7,13 +7,13 @@ export interface ErrorResponse {
   };
 }
 
-// 設定型
+// Configuration type
 export interface MdbookServerConfig {
   rootPath: string;
   serverName?: string;
 }
 
-// MCPツールのレスポンス型
+// MCP tool response type
 export interface ListStructureResponse {
   title: string;
   authors: string[];
@@ -38,37 +38,37 @@ export interface ReadContentResponse {
   };
 }
 
-// 検索関連の型定義
+// Search-related type definitions
 export interface SearchContentRequest {
-  /** 検索クエリ */
+  /** Search query */
   query: string;
 
-  /** 最大結果件数（オプション、デフォルト: 10） */
+  /** Maximum number of results (optional, default: 10) */
   maxResults?: number;
 }
 
 export interface SearchContentResponse {
-  /** 検索クエリ */
+  /** Search query */
   query: string;
 
-  /** 総マッチ件数 */
+  /** Total number of matches */
   totalMatches: number;
 
-  /** 検索結果 */
+  /** Search results */
   results: Array<{
-    /** ファイルの相対パス */
+    /** Relative file path */
     path: string;
 
-    /** 章のタイトル */
+    /** Chapter title */
     title: string;
 
-    /** fuse.js のスコア（0に近いほど関連性が高い） */
+    /** fuse.js score (closer to 0 = higher relevance) */
     score: number;
 
-    /** マッチ数 */
+    /** Match count */
     matchCount: number;
 
-    /** マッチしたスニペット */
+    /** Matched snippets */
     matches: Array<{
       snippet: string;
       position: number;

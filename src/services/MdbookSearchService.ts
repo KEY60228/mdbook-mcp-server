@@ -7,13 +7,13 @@ import { MdbookStructureService } from './MdbookStructureService.js';
 import { validatePath } from '../utils/pathUtils.js';
 
 export interface SearchOptions {
-  /** 検索クエリ */
+  /** Search query */
   query: string;
 
-  /** 最大結果件数（デフォルト: 10） */
+  /** Maximum number of results (default: 10) */
   maxResults?: number;
 
-  /** スニペット前後の文字数（デフォルト: 50） */
+  /** Number of characters around snippet (default: 50) */
   contextLength?: number;
 }
 
@@ -30,7 +30,7 @@ export class MdbookSearchService {
   ) {}
 
   /**
-   * mdbookプロジェクト内を検索
+   * Search within mdbook project
    */
   async search(
     project: MdbookProject,
@@ -38,21 +38,21 @@ export class MdbookSearchService {
   ): Promise<SearchResult[]> {
     const { query, maxResults = 10, contextLength = 50 } = options;
 
-    // ステップ1: クエリのバリデーション
+    // Step 1: Validate query
     this.validateQuery(query);
 
-    // ステップ2: 章リストの取得
+    // Step 2: Get chapter list
     const structure = await this.structureService.getStructure(project);
     const chapterPaths = this.collectChapterPaths(structure.chapters);
 
-    // ステップ3: 検索ドキュメントの構築
+    // Step 3: Build search documents
     const documents = await this.buildSearchDocuments(project, chapterPaths);
 
     if (documents.length === 0) {
       return [];
     }
 
-    // ステップ4: fuse.js による検索
+    // Step 4: Search with fuse.js
     const fuse = new Fuse(documents, {
       keys: ['content'],
       includeScore: true,
@@ -64,7 +64,7 @@ export class MdbookSearchService {
 
     const fuseResults = fuse.search(query);
 
-    // ステップ5: 結果の変換
+    // Step 5: Transform results
     const searchResults: SearchResult[] = fuseResults.map((result) => {
       const document = result.item;
       const score = result.score ?? 1;
@@ -83,18 +83,18 @@ export class MdbookSearchService {
       };
     });
 
-    // ステップ6: 結果の制限
+    // Step 6: Limit results
     return searchResults.slice(0, maxResults);
   }
 
   /**
-   * 章リストから全パスを再帰的に収集
+   * Recursively collect all paths from chapter list
    */
   private collectChapterPaths(chapters: Chapter[]): Array<{ path: string; title: string }> {
     const result: Array<{ path: string; title: string }> = [];
 
     for (const chapter of chapters) {
-      // path が null の場合はセパレーターなのでスキップ
+      // Skip if path is null (separator)
       if (chapter.path !== null) {
         result.push({
           path: chapter.path,
@@ -102,7 +102,7 @@ export class MdbookSearchService {
         });
       }
 
-      // 子章も再帰的に処理
+      // Recursively process child chapters
       if (chapter.children && chapter.children.length > 0) {
         result.push(...this.collectChapterPaths(chapter.children));
       }
@@ -112,7 +112,7 @@ export class MdbookSearchService {
   }
 
   /**
-   * 検索ドキュメントを構築
+   * Build search documents
    */
   private async buildSearchDocuments(
     project: MdbookProject,
@@ -122,10 +122,10 @@ export class MdbookSearchService {
 
     for (const { path, title } of chapterPaths) {
       try {
-        // パスをバリデーション
+        // Validate path
         const fullPath = validatePath(path, project.rootPath);
 
-        // ファイルを読み込み
+        // Read file
         const content = await this.fs.readFile(fullPath);
 
         documents.push({
@@ -134,7 +134,7 @@ export class MdbookSearchService {
           content,
         });
       } catch (error: any) {
-        // ファイル読み取りエラーは個別にスキップ
+        // Skip individual file read errors
         console.error(`Failed to read file ${path}: ${error.message}`);
       }
     }
@@ -143,7 +143,7 @@ export class MdbookSearchService {
   }
 
   /**
-   * fuse.js の結果からスニペットを生成
+   * Generate snippets from fuse.js results
    */
   private generateSnippets(
     content: string,
@@ -156,22 +156,22 @@ export class MdbookSearchService {
 
     const snippets: SearchMatch[] = [];
 
-    // content フィールドのマッチのみを処理
+    // Process only content field matches
     const contentMatches = matches.filter((m) => m.key === 'content');
 
-    // 最大3件まで
+    // Maximum 3 snippets
     const maxSnippets = Math.min(3, contentMatches.length);
 
     for (let i = 0; i < maxSnippets; i++) {
       const match = contentMatches[i];
       if (match.indices && match.indices.length > 0) {
-        // 最初のマッチ位置を使用
+        // Use first match position
         const [startIndex, endIndex] = match.indices[0];
 
         const snippet = this.generateSnippet(
           content,
           startIndex,
-          endIndex + 1, // endIndex は inclusive なので +1
+          endIndex + 1, // endIndex is inclusive so +1
           contextLength
         );
 
@@ -186,7 +186,7 @@ export class MdbookSearchService {
   }
 
   /**
-   * 単一のスニペットを生成
+   * Generate a single snippet
    */
   private generateSnippet(
     content: string,
@@ -194,19 +194,19 @@ export class MdbookSearchService {
     endIndex: number,
     contextLength: number
   ): string {
-    // スニペットの範囲を計算
+    // Calculate snippet range
     const snippetStart = Math.max(0, startIndex - contextLength);
     const snippetEnd = Math.min(content.length, endIndex + contextLength);
 
-    // スニペットを抽出
+    // Extract snippet
     let snippet = content.substring(snippetStart, snippetEnd);
 
-    // 前方が省略される場合は "..." を追加
+    // Add "..." if truncated at start
     if (snippetStart > 0) {
       snippet = '...' + snippet;
     }
 
-    // 後方が省略される場合は "..." を追加
+    // Add "..." if truncated at end
     if (snippetEnd < content.length) {
       snippet = snippet + '...';
     }
@@ -215,7 +215,7 @@ export class MdbookSearchService {
   }
 
   /**
-   * クエリのバリデーション
+   * Validate query
    */
   private validateQuery(query: string): void {
     if (!query || query.trim().length === 0) {

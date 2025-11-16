@@ -32,7 +32,7 @@ export class MdbookMcpServer {
       }
     );
 
-    // サービスの初期化
+    // Initialize services
     const fs = new FileSystemAdapter();
     const tomlParser = new TomlParser();
     const markdownParser = new MarkdownParser();
@@ -41,16 +41,16 @@ export class MdbookMcpServer {
     this.contentService = new MdbookContentService(fs);
     this.searchService = new MdbookSearchService(fs, this.structureService);
 
-    // プロジェクトの初期化
+    // Initialize project
     const srcPath = `${config.rootPath}/src`;
     this.project = new MdbookProject(config.rootPath, srcPath);
 
-    // ツールの登録
+    // Register tools
     this.setupTools();
   }
 
   private setupTools() {
-    // list_structure ツールの登録
+    // Register list_structure tool
     this.mcpServer.registerTool(
       'list_structure',
       {
@@ -71,7 +71,7 @@ export class MdbookMcpServer {
       }
     );
 
-    // read_content ツールの登録
+    // Register read_content tool
     this.mcpServer.registerTool(
       'read_content',
       {
@@ -96,7 +96,7 @@ export class MdbookMcpServer {
       }
     );
 
-    // search_content ツールの登録
+    // Register search_content tool
     this.mcpServer.registerTool(
       'search_content',
       {

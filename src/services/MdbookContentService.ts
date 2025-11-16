@@ -7,16 +7,16 @@ export class MdbookContentService {
   constructor(private fs: FileSystemAdapter) {}
 
   async readContent(project: MdbookProject, relativePath: string): Promise<ReadContentResponse> {
-    // パストラバーサルチェック
+    // Path traversal check
     const fullPath = validatePath(relativePath, project.rootPath);
 
-    // ファイルの存在確認
+    // Check file existence
     const exists = await this.fs.fileExists(fullPath);
     if (!exists) {
       throw new Error(`File not found: ${relativePath}`);
     }
 
-    // ファイルの読み込み
+    // Read file
     const content = await this.fs.readFile(fullPath);
     const metadata = await this.fs.getFileStats(fullPath);
 
