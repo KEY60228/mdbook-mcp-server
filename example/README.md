@@ -4,10 +4,15 @@ This is an example mdbook project demonstrating the structure and usage of [mdbo
 
 ## About
 
-This book contains selected chapters from Lewis Carroll's classic **Alice's Adventures in Wonderland** (1865), which is now in the public domain. The content is organized into two parts:
+This book contains selected chapters from Lewis Carroll's classic **Alice's Adventures in Wonderland** (1865), which is now in the public domain. The content is available in both English and Japanese, organized into two parts:
 
+### English Version
 - **Part 1: Down the Rabbit Hole** - Alice's initial descent and first encounters
 - **Part 2: Adventures in Wonderland** - Continued adventures with Wonderland's peculiar inhabitants
+
+### 日本語版
+- **第1部：うさぎの穴を下って** - アリスの不思議の国への降下と最初の出会い
+- **第2部：不思議の国の冒険** - 不思議な住人たちとのアリスの冒険
 
 ## Building the Book
 
@@ -75,11 +80,21 @@ See `.example.mcp.json` for a configuration template. The key requirements are:
 
 Once configured, try asking questions like:
 
+### English Queries
 - "What chapters are in this Alice book?"
 - "Show me Chapter 1"
 - "What happens when Alice meets the Caterpillar?"
 - "Summarize Part 2"
 - "Find mentions of the White Rabbit"
+- "Search for 'rabbit' in the book"
+
+### 日本語クエリ
+- "この本には何章ありますか？"
+- "第1章を見せて"
+- "アリスがイモムシに会ったときに何が起こりますか？"
+- "第2部を要約して"
+- "「うさぎ」についての言及を探して"
+- "「認証」で検索して" (tests search functionality)
 
 ## Project Structure
 
@@ -87,18 +102,39 @@ Once configured, try asking questions like:
 .
 ├── book.toml           # Book configuration
 ├── src/
-│   ├── SUMMARY.md      # Table of contents
-│   ├── introduction.md # Introduction
-│   ├── part1/          # Part 1 chapters
-│   │   ├── chapter1.md
-│   │   ├── chapter2.md
-│   │   └── chapter3.md
-│   └── part2/          # Part 2 chapters
-│       ├── chapter4.md
-│       ├── chapter5.md
-│       └── chapter6.md
+│   ├── SUMMARY.md      # Table of contents (bilingual)
+│   ├── en/             # English version
+│   │   ├── introduction.md
+│   │   ├── part1/      # Part 1: Down the Rabbit Hole
+│   │   │   ├── chapter1.md
+│   │   │   ├── chapter2.md
+│   │   │   └── chapter3.md
+│   │   └── part2/      # Part 2: Adventures in Wonderland
+│   │       ├── chapter4.md
+│   │       ├── chapter5.md
+│   │       └── chapter6.md
+│   └── ja/             # 日本語版
+│       ├── introduction.md
+│       ├── part1/      # 第1部：うさぎの穴を下って
+│       │   ├── chapter1.md
+│       │   ├── chapter2.md
+│       │   └── chapter3.md
+│       └── part2/      # 第2部：不思議の国の冒険
+│           ├── chapter4.md
+│           ├── chapter5.md
+│           └── chapter6.md
 └── .example.mcp.json   # MCP configuration example
 ```
+
+## Features Demonstrated
+
+This example project demonstrates:
+
+- **Bilingual content** - Both English and Japanese versions of the same story
+- **Hierarchical structure** - Organized into parts and chapters
+- **Search functionality** - Test with both English keywords (e.g., "rabbit", "Alice") and Japanese keywords (e.g., "うさぎ", "アリス", "不思議の国")
+- **Content retrieval** - Access individual chapters or entire parts
+- **Fuzzy search** - The search tool supports typo tolerance and relevance scoring
 
 ## License
 
